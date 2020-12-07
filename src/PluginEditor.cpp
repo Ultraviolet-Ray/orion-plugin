@@ -94,7 +94,6 @@ mainlist("main", dynamic_cast<ListBoxModel*> (&maindir)), startTime(Time::getMil
     //dropDownBottonBar->replaceColour(Colours::black,colour);
     dropDownBottonBar->replaceColour(Colours::black,Colours::black);
     
-    
     // Dropdown EQ BUTTON
     Image downImage = ImageCache::getFromMemory(BinaryData::EQButtonOn_png,  BinaryData::EQButtonOn_pngSize);
     Image upImage   = ImageCache::getFromMemory(BinaryData::EQButtonOff_png, BinaryData::EQButtonOff_pngSize);
@@ -123,6 +122,8 @@ mainlist("main", dynamic_cast<ListBoxModel*> (&maindir)), startTime(Time::getMil
         updateDropDownClipState(dropDownClip->getToggleState());
     };
     addAndMakeVisible(dropDownClip.get());
+    
+    
 
     // Dropdown ENV BUTTON
     downImage = ImageCache::getFromMemory(BinaryData::ENVButtonOn_png,  BinaryData::ENVButtonOn_pngSize);
@@ -137,6 +138,8 @@ mainlist("main", dynamic_cast<ListBoxModel*> (&maindir)), startTime(Time::getMil
         updateDropDownENVState(dropDownENV->getToggleState());
     };
     addAndMakeVisible(dropDownENV.get());
+    
+    
 
     // Dropdown FX BUTTON
     downImage = ImageCache::getFromMemory(BinaryData::FXButtonOn_png,  BinaryData::FXButtonOn_pngSize);
@@ -172,7 +175,6 @@ mainlist("main", dynamic_cast<ListBoxModel*> (&maindir)), startTime(Time::getMil
         updateResizeViewState(resizeButton->getToggleState());
     };
     addAndMakeVisible(resizeButton.get());
-    
     
     
     
@@ -392,6 +394,8 @@ void OrionaudioAudioProcessorEditor::resized()
     // Footer Path
     path.addRectangle (0, getHeight() - 2.1 * unite, getWidth(), 1.0f);
     footerPath->setPath(path);
+    
+    
     
     // Dropdown Bar
     path.addRectangle (0, getHeight() - 2.1 * unite, getWidth(), 4 * unite);
@@ -733,6 +737,15 @@ void OrionaudioAudioProcessorEditor::updateDropDownEQState(bool newState)
     }
     dropdownTable->tabChange(0);//--!!!!!!!!!!!
     resized();
+    dropdownTable->toFront(true);
+    footerPath->toFront(true);
+    dropDownBottonBar->toFront(true);
+    dropDownEQ->toFront(true);
+    dropDownClip->toFront(true);
+    dropDownFX->toFront(true);
+    dropDownENV->toFront(true);
+    resizeButton->toFront(true);
+    backButton->toFront(true);
 }
 
 
@@ -774,6 +787,15 @@ void OrionaudioAudioProcessorEditor::updateDropDownClipState(bool newState)
     }
     dropdownTable->tabChange(1);//--!!!!!!!!!!!
     resized();
+    dropdownTable->toFront(true);
+    footerPath->toFront(true);
+    dropDownBottonBar->toFront(true);
+    dropDownEQ->toFront(true);
+    dropDownClip->toFront(true);
+    dropDownFX->toFront(true);
+    dropDownENV->toFront(true);
+    resizeButton->toFront(true);
+    backButton->toFront(true);
 }
 
 
@@ -801,6 +823,15 @@ void OrionaudioAudioProcessorEditor::updateDropDownENVState(bool newState)
     }
     dropdownTable->tabChange(2);//--!!!!!!!!!!!
     resized();
+    dropdownTable->toFront(true);
+    footerPath->toFront(true);
+    dropDownBottonBar->toFront(true);
+    dropDownEQ->toFront(true);
+    dropDownClip->toFront(true);
+    dropDownFX->toFront(true);
+    dropDownENV->toFront(true);
+    resizeButton->toFront(true);
+    backButton->toFront(true);
 }
 
 
@@ -830,6 +861,15 @@ void OrionaudioAudioProcessorEditor::updateDropDownFXState(bool newState)
     
     dropdownTable->tabChange(3);//--!!!!!!!!!!!
     resized();
+    dropdownTable->toFront(true);
+    footerPath->toFront(true);
+    dropDownBottonBar->toFront(true);
+    dropDownEQ->toFront(true);
+    dropDownClip->toFront(true);
+    dropDownFX->toFront(true);
+    dropDownENV->toFront(true);
+    resizeButton->toFront(true);
+    backButton->toFront(true);
 }
 
 

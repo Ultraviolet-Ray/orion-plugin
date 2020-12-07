@@ -223,7 +223,7 @@ void OrionaudioAudioProcessor::getStateInformation (MemoryBlock& destData)
         }
     };
     state.addChild(parameters.copyState(), 0, nullptr);
-    state.getChildWithName("SEQUENCER").addChild(sequencer->getStateInformation(), 1, nullptr);
+    //state.getChildWithName("SEQUENCER").addChild(sequencer->getStateInformation(), 1, nullptr);
 //    DBG(state.toXmlString());
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);

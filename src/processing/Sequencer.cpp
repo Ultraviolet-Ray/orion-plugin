@@ -15,8 +15,9 @@ Sequencer::Sequencer(Synthesiser* s)
     sampler = s;
     
     formatManager.registerBasicFormats();
-
-    sequence.reset(new NoteSequence());
+    for (int i = 0; i < 4; i++) {
+        sequences[i].reset(new NoteSequence());
+    }
     
     for (int i = 0; i < NoteSequence::noteValues.size(); i++) {
         channels[NoteSequence::noteValues[i]] = 1;
@@ -48,50 +49,54 @@ void Sequencer::processBlock(AudioPlayHead* p, AudioBuffer<float> &buffer, MidiB
             
 void Sequencer::addToBufferIfNeeded(int which, int samplesPerBlock, MidiBuffer &midiBuffer)
 {
+    
     // get current position
     AudioPlayHead::CurrentPositionInfo currentPos;
     playhead->getCurrentPosition(currentPos);
     if (!currentPos.isPlaying)
         return;
     long long posInSamples = currentPos.timeInSamples;
-    posInSamples %= NoteSequence::ppqToSamples(1, currentPos.bpm, lastSampleRate);
-    auto notes = sequence->getNotes();
-    double loopEnd = NoteSequence::ppqToSamples(1, currentPos.bpm, lastSampleRate);
+    posInSamples %= NoteSequence::ppqToSamples(loopEnd, currentPos.bpm, lastSampleRate);
+    double loopEndInSamples = NoteSequence::ppqToSamples(loopEnd, currentPos.bpm, lastSampleRate);
 
     for (int i = 0; i < 4; i++) {
         double downbeat = NoteSequence::ppqToSamples((int)i * .25, currentPos.bpm, lastSampleRate);
-        double nextBeat =NoteSequence::ppqToSamples((int)(i + 1) * .25, currentPos.bpm, lastSampleRate);
+        double nextBeat = NoteSequence::ppqToSamples((int)(i + 1) * .25, currentPos.bpm, lastSampleRate);
         if (posInSamples + samplesPerBlock >= downbeat && posInSamples < nextBeat) {
             currentDownbeat = i;
             break;
         }
     }
-
+    
+    int beatOffset = 0;
     // iterate through all notes
-    for (int i = 0; i < notes.size(); i++){
-        int beatInSamples = NoteSequence::ppqToSamples(notes[i].startTime, currentPos.bpm, lastSampleRate);
+    for (int s = 0; s < activeSequences.size(); s++) {
+        if (!activeSequences[s]) continue;
+        auto notes = sequences[s]->getNotes();
+
+        for (int i = 0; i < notes.size(); i++) {
+        int beatInSamples = NoteSequence::ppqToSamples(beatOffset + notes[i].startTime, currentPos.bpm, lastSampleRate);
         
         // check first beat
-        if (posInSamples + samplesPerBlock >= loopEnd && posInSamples <= loopEnd && notes[i].startTime == 0)
+        if (posInSamples + samplesPerBlock >= loopEndInSamples && posInSamples <= loopEndInSamples && notes[i].startTime + beatOffset == 0)
         {
-            long long offset = loopEnd - posInSamples;
+            long long offset = loopEndInSamples - posInSamples;
             
             int channel = channels[notes[i].pitch];
             if (channel != 1) {
                 midiBuffer.addEvent(MidiMessage::allNotesOff(channel), (int)offset);
                 midiBuffer.addEvent(MidiMessage::allSoundOff(channel), (int)offset);
             }
-            DBG(channel);
             midiBuffer.addEvent(MidiMessage::noteOn(channel, notes[i].pitch, .8f), (int)offset);
             lastNotesPlayed.push(notes[i]);
         }
         
         // check all other beats
         else if (beatInSamples > posInSamples &&
-            beatInSamples < posInSamples + samplesPerBlock)
+                 beatInSamples < posInSamples + samplesPerBlock)
         {
             long long offset = beatInSamples - posInSamples;
-
+            
             int channel = channels[notes[i].pitch];
             if (channel != 1) {
                 midiBuffer.addEvent(MidiMessage::allNotesOff(channel), (int)offset);
@@ -99,52 +104,20 @@ void Sequencer::addToBufferIfNeeded(int which, int samplesPerBlock, MidiBuffer &
             }
             midiBuffer.addEvent(MidiMessage::noteOn(channel, notes[i].pitch, .8f), (int)offset);
             lastNotesPlayed.push(notes[i]);
-        }
+        }}
+        beatOffset++;
     }
 }
 
 ValueTree Sequencer::getStateInformation()
 {
-    return sequence->toValueTree();
+//    return sequence->toValueTree();
 }
 
 void Sequencer::setStateInformation(ValueTree tree)
 {
-    sequence->fromValueTree(tree);
+//    sequence->fromValueTree(tree);
     
-}
-
-void Sequencer::setNewSequence(NoteSequence* newSequence)
-{
-    sequence.reset(newSequence);
-    for (int i = 0; i < listeners.size(); i++){
-        listeners[i]->sequenceChanged();
-    }
-
-}
-
-void Sequencer::swapSequences(Sequencer &otherSequencer, bool clearOther)
-{
-    sequence.swap(otherSequencer.getSequenceForSwap());
-    if (clearOther)
-        otherSequencer.clearSequence();
-    for (int i = 0; i < listeners.size(); i++){
-        listeners[i]->sequenceChanged();
-    }
-}
-
-void Sequencer::clearSequence()
-{
-    sequence.reset(new NoteSequence());
-    for (int i = 0; i < listeners.size(); i++){
-        listeners[i]->sequenceChanged();
-    }
-
-}
-
-std::unique_ptr<NoteSequence>& Sequencer::getSequenceForSwap()
-{
-    return sequence;
 }
 
 void Sequencer::addListener(Listener* l)
@@ -161,9 +134,9 @@ void Sequencer::removeListener(Listener* l)
     }
 }
 
-void Sequencer::addNote(Note n)
+void Sequencer::addNote(int barNum, Note n)
 {
-    sequence->addNote(n);
+    sequences[barNum]->addNote(n);
 }
 
 void Sequencer::removeNote(Note n)
@@ -193,10 +166,10 @@ void Sequencer::setSequenceLength(int newLength) {
 void Sequencer::setSubDivision(NoteSequence::SubDivision s) {
     subdivision = s;
     
-    for (int i = 0; i < sequence->getNotes().size(); i++) {
-        Note currentNote = sequence->getNotes()[i];
+    for (int i = 0; i < sequences[0]->getNotes().size(); i++) {
+        Note currentNote = sequences[0]->getNotes()[i];
         DBG(currentNote.startTime / double(subdivision));
         if (std::fmod(currentNote.startTime, subdivision) != 0)
-            sequence->removeNote(currentNote.pitch, currentNote.startTime);
+            sequences[0]->removeNote(currentNote.pitch, currentNote.startTime);
     }
 }
