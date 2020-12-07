@@ -22,38 +22,36 @@ SequencerButton::SequencerButton(int p, double b) : ToggleButton(), pitch(p), be
 
 SequencerButton::~SequencerButton()
 {
-    
 }
 
-void SequencerButton::paintButton (Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void SequencerButton::paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
     Rectangle<float> buttonArea = getLocalBounds().toFloat();
     float diameter = std::min(buttonArea.getWidth(), buttonArea.getHeight());
     buttonArea.setSize(diameter, diameter);
-    
+    diameter = 10;
+
     Colour colour;
-    if (getToggleState() && frameCount == 0) {
-        g.setColour(findColour(ColourIds::fillColourOn));
+    if (getToggleState() && frameCount == 0)
+    {
+        g.setColour(Colours::white);
         g.fillEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2));
-        g.setColour(findColour(ColourIds::borderColourOn));
-        g.drawEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2), 1.f);
     }
-    
-    else if (!getToggleState()) {
-        g.setColour(findColour(ColourIds::fillColourOff));
+
+    else if (!getToggleState())
+    {
+        g.setColour(Colours::darkgrey);
         g.fillEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2));
-        g.setColour(findColour(ColourIds::borderColourOff));
-        g.drawEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2), 1.f);
     }
-    
-    else if (frameCount != 0) {
+
+    else if (frameCount != 0)
+    {
         float normalizedCount = (frameCount) / (1.f * ANIMATION_LENGTH);
         float ratio = 1.f - normalizedCount;
         colour = Colour(0xff00FEE2).interpolatedWith(Colours::white, ratio);
         g.setColour(colour);
         g.fillEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2));
     }
-
 }
 
 void SequencerButton::timerCallback()
@@ -71,5 +69,3 @@ void SequencerButton::startAnimation()
 {
     startTimerHz(30);
 }
-
-
