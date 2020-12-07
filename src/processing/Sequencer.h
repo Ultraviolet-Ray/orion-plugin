@@ -47,7 +47,7 @@ public:
     Sequencer(Synthesiser* sampler);
     
     
-    NoteSequence* getNoteSequence(int which) { return sequences[which].get(); };
+    NoteSequence* getNoteSequence() { return sequence.get(); };
     void setNewSequence(NoteSequence* newSequence);
     
     void prepareToPlay(double sampleRate);
@@ -66,7 +66,7 @@ public:
     void clearSequence();
     std::unique_ptr<NoteSequence>& getSequenceForSwap();
     
-    void addNote(int barNum, Note n);
+    void addNote(Note n);
     void removeNote(Note n);
     
     void createSynthesizerSound(Layout l);
@@ -84,33 +84,24 @@ public:
     void setSubDivision(NoteSequence::SubDivision s);
     
     void setChannel(int voice, int channel) { channels[voice] = channel; };
-    
-    bool getSequenceActive(int which) {return activeSequences[which]; };
-    void setSequenceActive(int which, bool active) {
-        activeSequences[which] = active;
-        loopEnd = 0;
-        for (int i = 0; i < activeSequences.size(); i++) {
-            if (activeSequences[i]) loopEnd++;
-        }
-    }
 private:
     std::map<int, int> channels;
-    std::array<bool, 4> activeSequences = {true, true, true, true};
+    
     NoteSequence::SubDivision subdivision = NoteSequence::SubDivision::sixteenth;
-    double loopEnd = 1;
+
     void notifyListenersNotePlayed(int pitch, int note);
     std::vector<Listener*> listeners;
     
-    std::array<std::unique_ptr<NoteSequence>, 4> sequences;
+    std::unique_ptr<NoteSequence> sequence;
     AudioPlayHead* playhead;
     Synthesiser* sampler;
     AudioFormatManager formatManager;
     float lastSampleRate = globalSampleRate;
     int sequenceLength = 16;
     NoteSequence::SubDivision currentSubDivision = NoteSequence::SubDivision::sixteenth;
-    NoteSequence::SubDivision currentSubDivisions[4] = {NoteSequence::SubDivision::sixteenth, NoteSequence::SubDivision::sixteenth, NoteSequence::SubDivision::sixteenth, NoteSequence::SubDivision::sixteenth};
-
     bool isActive = true;
     
     std::vector<SynthesiserSound::Ptr> samplerSounds;
 };
+
+

@@ -30,17 +30,20 @@ void SequencerButton::paintButton (Graphics& g, bool shouldDrawButtonAsHighlight
     Rectangle<float> buttonArea = getLocalBounds().toFloat();
     float diameter = std::min(buttonArea.getWidth(), buttonArea.getHeight());
     buttonArea.setSize(diameter, diameter);
-    diameter = 10;
     
     Colour colour;
     if (getToggleState() && frameCount == 0) {
-        g.setColour(Colours::white);
+        g.setColour(findColour(ColourIds::fillColourOn));
         g.fillEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2));
+        g.setColour(findColour(ColourIds::borderColourOn));
+        g.drawEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2), 1.f);
     }
     
     else if (!getToggleState()) {
-        g.setColour(Colours::darkgrey);
+        g.setColour(findColour(ColourIds::fillColourOff));
         g.fillEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2));
+        g.setColour(findColour(ColourIds::borderColourOff));
+        g.drawEllipse(buttonArea.withSizeKeepingCentre(diameter - 2, diameter - 2), 1.f);
     }
     
     else if (frameCount != 0) {

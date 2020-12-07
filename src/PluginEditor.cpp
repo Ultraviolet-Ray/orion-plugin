@@ -905,6 +905,7 @@ void OrionaudioAudioProcessorEditor::toggleArrangmentWindow(bool windowVisible)
     primaryPane->setVisible(!windowVisible);
     resized();
     
+    DBG("--------------------------------------");
 }
 
 bool OrionaudioAudioProcessorEditor::getDropdownVisible()

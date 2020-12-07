@@ -207,7 +207,16 @@ void SimpleSynth::loadSamples()
         instrumentSampleBufferPointer[i] = sampler->getAudioData();
         instrumentOriginalSampleContainer[i] = *instrumentSampleBufferPointer[i];
         instrumentSampleContainer[i] = instrumentOriginalSampleContainer[i];
-      
+        //instrumentSampleLength[i] = sampler->getLengthPtr();
+
+//        if(i == 0)
+//        {
+//            instrumentSampleBufferPointer[0]->setSize(2, 10000 - 2048,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */true);
+//            instrumentSampleBufferPointer[0]->setDataToReferTo(instrumentSampleContainer[0].getArrayOfWritePointers(), 2, 2048, 10000);
+//            sampler->setLength(10000 - 2048);
+//        }
+//        
+
         addSound(sampler);
     }
     
