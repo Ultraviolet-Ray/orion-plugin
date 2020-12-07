@@ -152,7 +152,7 @@
               file="src/components/SequencerButton.cpp"/>
         <FILE id="hy1czz" name="SequencerButton.h" compile="0" resource="0"
               file="src/components/SequencerButton.h"/>
-        <FILE id="D9cG7r" name="SequencerComponent.cpp" compile="1" resource="0"
+        <FILE id="UuD68r" name="SequencerComponent.cpp" compile="1" resource="0"
               file="src/components/SequencerComponent.cpp"/>
         <FILE id="tF48AF" name="SequencerComponent.h" compile="0" resource="0"
               file="src/components/SequencerComponent.h"/>
