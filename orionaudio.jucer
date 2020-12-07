@@ -62,6 +62,7 @@
       <GROUP id="{84899CBE-90A2-AE76-E23F-B80F68DAC29C}" name="components">
         <FILE id="HId9tK" name="AutoLabel.cpp" compile="1" resource="0" file="src/components/AutoLabel.cpp"/>
         <FILE id="P0ai3x" name="AutoLabel.h" compile="0" resource="0" file="src/components/AutoLabel.h"/>
+        <FILE id="zISSdn" name="BarButton.h" compile="0" resource="0" file="src/components/BarButton.h"/>
         <FILE id="k3TpUU" name="CircularMeter.cpp" compile="1" resource="0"
               file="src/components/CircularMeter.cpp"/>
         <FILE id="heEkaw" name="CircularMeter.h" compile="0" resource="0" file="src/components/CircularMeter.h"/>
