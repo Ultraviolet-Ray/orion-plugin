@@ -249,11 +249,9 @@ void SequencerComponent::resized()
     const int numBeats = int(sequencer.getSubDivision());
     const int numBeatsPerSection = numBeats / numSections;
     int barNum = 0;
-<<<<<<< HEAD
     barLines[barNum] = Rectangle<int>(plotArea.getX(), 0, 2, plotArea.getHeight());
-    == == == =
-                 barLines[barNum] = Rectangle<int>(plotArea.getX(), plotArea.getY(), 2, getHeight());
->>>>>>> upstream/progress-check
+    barLines[barNum] = Rectangle<int>(plotArea.getX(), plotArea.getY(), 2, getHeight());
+
     barNum++;
     for (int i = numBeatsPerSection - 1; i < numBeats - numBeatsPerSection; i += numBeatsPerSection)
     {
@@ -263,10 +261,8 @@ void SequencerComponent::resized()
         barLines[barNum] = {int(xPos - 1), 0, 2, getHeight()};
         barNum++;
     }
-<<<<<<< HEAD
-    == == == =
 
-                 barButtonGroupArea = Rectangle<int>(plotArea.getX(), 0, plotArea.getWidth(), getHeight() * .15);
+    barButtonGroupArea = Rectangle<int>(plotArea.getX(), 0, plotArea.getWidth(), getHeight() * .15);
     barButtonGroupArea = barButtonGroupArea.withSizeKeepingCentre(plotArea.getWidth() * .33, plotArea.getHeight() * .05);
     barButtonGroupArea.translate(0, -barButtonGroupArea.getHeight() / 2);
 
@@ -290,8 +286,6 @@ void SequencerComponent::resized()
     channelLabel.setBounds(instLabel.getBounds().translated(instLabel.getWidth(), 0));
 
     repaint();
-    
->>>>>>> upstream/progress-check
 }
 
 void SequencerComponent::mouseUp(const MouseEvent &e)
@@ -329,23 +323,18 @@ void SequencerComponent::buttonClicked(Button *b)
     {
         int pitch = button->getPitch();
         double beat = button->getBeat();
-<<<<<<< HEAD
         //        std::cout << pitch << "," << beat << std::endl;
         NoteSequence *sequence = sequencer.getNoteSequence();
         if (sequence->checkAndRemoveNote(pitch, beat))
             DBG("removed");
-        else
-            == == == =
-                         //        std::cout << pitch << "," << beat << std::endl;
-                NoteSequence *sequence = sequencer.getNoteSequence(currentSequence);
+        else //        std::cout << pitch << "," << beat << std::endl;
+            NoteSequence *sequence = sequencer.getNoteSequence(currentSequence);
         if (!sequence->checkAndRemoveNote(pitch, beat))
->>>>>>> upstream/progress-check
         {
             sequence->addNote(Note(pitch, 100, beat, beat + (1.0 / sequencer.getSubDivision())));
         }
     }
 }
-
 void SequencerComponent::buttonStateChanged(Button *b)
 {
     if (b->getToggleStateValue() == true)
