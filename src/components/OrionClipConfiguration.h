@@ -16,6 +16,7 @@
 #include "ImagerMeter.h"
 #include "DoubleThumbSlider.h"
 
+#include <rubberband/RubberBandStretcher.h> //rub!!!
 
 
 //==============================================================================
@@ -76,7 +77,8 @@ public:
 private:
     OrionaudioAudioProcessor& processor;
     
-    
+    std::unique_ptr<RubberBand::RubberBandStretcher> rb;//rub!!!
+    AudioBuffer<float> mTempBuffer;//rub!!!
     
     
     

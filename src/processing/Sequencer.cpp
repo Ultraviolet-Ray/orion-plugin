@@ -41,7 +41,6 @@ void Sequencer::processBlock(AudioPlayHead* p, AudioBuffer<float> &buffer, MidiB
     if (playhead == nullptr)
         return;
     
-
     addToBufferIfNeeded(0, numSamples, midiBuffer);
     
     sampler->renderNextBlock(buffer, midiBuffer, 0, buffer.getNumSamples());

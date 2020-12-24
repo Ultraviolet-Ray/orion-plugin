@@ -35,6 +35,7 @@ public:
                  bool allowTailOff) override;
     typedef enum Sounds{KICK=0, SNARE, CLAP, PERC, SNAP, HHO, HHC, CRASH} Sounds_t;
     double sampleRate;
+    
     void changeSamples(int index,const String &f,int midi);
 
 
@@ -43,7 +44,6 @@ public:
     //OrionaudioAudioProcessorEditor* editor;
     
 private:
-    
     
     File audiofolder;
     AudioFormatManager audioFormatManager;

@@ -33,6 +33,7 @@
 #include "math.h"
 
 
+#include <rubberband/RubberBandStretcher.h> //rub!!!
 
 
 
@@ -41,6 +42,11 @@ class OrionSamplerVoice : public SamplerVoice
 {
     
 private:
+    
+    std::unique_ptr<RubberBand::RubberBandStretcher> rb;//rub!!!
+    AudioBuffer<float> mTempBuffer;//rub!!!
+    
+    
     BigInteger midiNote;
     
 
@@ -223,6 +229,9 @@ public:
           
         }
         updatePlots();
+        
+//        rb = std::make_unique<RubberBand::RubberBandStretcher>(sr,2,RubberBand::RubberBandStretcher::DefaultOptions,0.5,0.5);//rub!!!
+//        rb->reset();
     };
 
     void setactivity(int index, int active)
@@ -572,6 +581,43 @@ public:
                     l *= envVal;
                     r *= envVal;
                 }
+                
+                
+                //MARK:- Apply Stretch
+                
+                
+            
+//                mTempBuffer.setSize(2,numSamples);
+//                
+//                auto outputBufferSamples = data.getNumSamples();//rub!!!
+//                auto readPointers = mTempBuffer.getArrayOfReadPointers();//rub!!!
+//                auto writePointers = data.getArrayOfWritePointers();//rub!!!
+//                auto samplesAvailable = rb->available();//rub!!!
+//                
+//                //getNextAudioBlock(AudioSourceChannelInfo(mTempBuffer));
+//                
+//                while (samplesAvailable < outputBufferSamples)
+//                {
+//                    //DBG(samplesAvailable);
+//                    rb->process(readPointers, mTempBuffer.getNumSamples(), false);
+//                    samplesAvailable = rb->available();
+//                }
+//
+//                rb->retrieve(writePointers,outputBuffer.getNumSamples());//rub!!!
+                
+                
+                
+                
+        
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 //MARK:- Sidechain Compressor
                 if(l == 0.0 && r == 0)
