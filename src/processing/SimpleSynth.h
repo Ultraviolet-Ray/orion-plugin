@@ -13,6 +13,7 @@
 #include "OrionSamplerVoice.h"
 #include "OrionSamplerSound.h"
 #include "DragAndDropButton.h"
+#include "SoundTouch.h"
 
 
 
@@ -40,6 +41,8 @@ public:
 
 
     std::array<std::unique_ptr<DragAndDropButton>, 8> drumButtons;
+    
+    
     
     //OrionaudioAudioProcessorEditor* editor;
     

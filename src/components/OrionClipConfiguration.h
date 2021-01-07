@@ -80,7 +80,7 @@ private:
     std::unique_ptr<RubberBand::RubberBandStretcher> rb;//rub!!!
     AudioBuffer<float> mTempBuffer;//rub!!!
     
-    
+    std::unique_ptr<soundtouch::SoundTouch> soundTouch;
     
     /* Images */
     

@@ -131,4 +131,7 @@ private:
     Analyser<float> inputAnalyser;
     Analyser<float> outputAnalyser;
     
+    
+    //std::unique_ptr<soundtouch::SoundTouch> soundTouch;
+    
 };

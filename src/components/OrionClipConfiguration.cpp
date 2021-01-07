@@ -306,6 +306,13 @@ OrionClipConfiguration::OrionClipConfiguration(OrionaudioAudioProcessor& p) : pr
     SEPointSlider.reset(new DoubleThumbSlider(clipMeter.get(),processor));
     addAndMakeVisible(SEPointSlider.get());
     
+   
+    soundTouch.reset(new soundtouch::SoundTouch());
+    soundTouch->setSampleRate(globalSampleRate);
+    soundTouch->setChannels(2);
+    soundTouch->setRate(1.0);
+    soundTouch->setTempo(1.0);
+    
 }
 
 void OrionClipConfiguration::paint (Graphics& g)
@@ -851,318 +858,45 @@ void OrionClipConfiguration::sliderDragEnded (Slider* slider)
 
 
 
-//void OrionClipConfiguration::clipStretchUpdate(double value)
-//{
-//    rb->setTimeRatio(value);
-//
-//
-//    int origSampleLength = instrumentOriginalSampleContainer[instrumetClickedSerial].getNumSamples();
-//    int ChannelNum = instrumentOriginalSampleContainer[instrumetClickedSerial].getNumChannels();
-//
-//    int newSampleLength = origSampleLength * value;
-//
-//    //mTempBuffer.setSize(ChannelNum,newSampleLength);
-//    instrumentSampleContainer[instrumetClickedSerial].setSize(ChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-//
-//    auto outputBufferSamples = instrumentSampleContainer[instrumetClickedSerial].getNumSamples();
-//    auto readPointers = instrumentOriginalSampleContainer[instrumetClickedSerial].getArrayOfReadPointers();//rub!!!
-//    auto writePointers = instrumentSampleContainer[instrumetClickedSerial].getArrayOfWritePointers();//rub!!!
-//    auto samplesAvailable = rb->available();//rub!!!
-//
-//    //getNextAudioBlock(AudioSourceChannelInfo(mTempBuffer));
-//
-////    while (samplesAvailable < outputBufferSamples)
-////    {
-////
-////        samplesAvailable += rb->available();
-////    }
-//
-//    rb->process(readPointers, instrumentOriginalSampleContainer[instrumetClickedSerial].getNumSamples(), false);
-//
-//    rb->retrieve(writePointers,newSampleLength);//rub!!!
-//
-//    if(samplesAvailable)
-//    {
-//        DBG("avaliable");
-//    }
-//
-//
-//    if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-//    {
-//        sound->setLength(newSampleLength);
-//    }
-//
-//    // Update To the Part of Selected Audio
-//    SEPointSlider->audioRangeChange();
-//
-//    // Update Audio Image
-//    clipMeter->repaint();
-//
-//}
-
-
-
 void OrionClipConfiguration::clipStretchUpdate(double value)
 {
     DBG(value);
-
-    int origSampleLength = instrumentOriginalSampleContainer[instrumetClickedSerial].getNumSamples();
-    int originalChannelNum = instrumentOriginalSampleContainer[instrumetClickedSerial].getNumChannels();
-
     instrumentSampleContainer[instrumetClickedSerial] = instrumentOriginalSampleContainer[instrumetClickedSerial];
-
-    AudioBuffer<float> localAudioContainerBuffer;
-    int newSampleLength = origSampleLength;
-    int times =  floor(value);
-
-    //if(value < 1.0f){value = 1.0f;}//临时
     
-    // < 1
-    if(value < 1.0f)
+    soundTouch->setTempo(1);
+    soundTouch->putSamples(instrumentSampleContainer[instrumetClickedSerial].getWritePointer(0), instrumentSampleContainer[instrumetClickedSerial].getNumSamples());
+    
+    soundTouch->setPitch(value);
+    
+    // to the original tempo (-50 .. +100 %)
+    //soundTouch->setTempoChange(value * 10);
+    
+    //soundTouch->setTempo((value - 2) * 10);
+    // Sets new tempo control value as a difference in percents compared
+    soundTouch->receiveSamples(instrumentSampleContainer[instrumetClickedSerial].getWritePointer(0), instrumentSampleContainer[instrumetClickedSerial].getNumSamples());
+    soundTouch->clear();
+
+//    soundTouch->flush();
+
+
+    //instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+    
+    //instrumentSampleContainer[instrumetClickedSerial] = soundTouch->audio;
+    
+
+    if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
     {
-        
-
-        
-        newSampleLength = origSampleLength * value;
-        int countGlobal = origSampleLength;
-        
-        
-        
-        
-        while(countGlobal > newSampleLength)
-        {
-            
-            
-            
-            int n = instrumentSampleContainer[instrumetClickedSerial].getNumSamples() - newSampleLength;//Amount of points need to be deleted
-            
-            if(n == 1)
-            {
-                float source = 0;
-                localAudioContainerBuffer.setSize(originalChannelNum, instrumentSampleContainer[instrumetClickedSerial].getNumSamples(),/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-                
-                localAudioContainerBuffer = instrumentSampleContainer[instrumetClickedSerial];
-                int length = instrumentSampleContainer[instrumetClickedSerial].getNumSamples() - 1;
-                
-                instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, length,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-                for (int i = 0; i < length; i++)
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        source = localAudioContainerBuffer.getSample(ch, i);
-                        instrumentSampleContainer[instrumetClickedSerial].copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                }
-                
-                if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-                {
-                    sound->setLength(length);
-                }
-                
-                return;
-            }
-            
-            int detelePointRuler = instrumentSampleContainer[instrumetClickedSerial].getNumSamples()/n;
-            
-            int tmp = 0;
-            float source = 0;
-            int count = 0;
-            
-            std::cout<< "n: "<< n<<std::endl;
-            std::cout<< "instrumentSampleContainer[instrumetClickedSerial].getNumSamples(): "<< instrumentSampleContainer[instrumetClickedSerial].getNumSamples()<<std::endl;
-            std::cout<< "detelePointRuler: "<< detelePointRuler<<std::endl;
-            localAudioContainerBuffer.setSize(originalChannelNum, instrumentSampleContainer[instrumetClickedSerial].getNumSamples() ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-            for (int i = 0; i < instrumentSampleContainer[instrumetClickedSerial].getNumSamples(); i++)
-            {
-                if (tmp != detelePointRuler)
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i);
-                        localAudioContainerBuffer.copyFrom(ch/* CH */, count/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                    count += 1;
-                    tmp += 1;
-                }
-                else
-                {
-                    tmp = 0;
-                }
-            }
-            
-            countGlobal = count;
-            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, countGlobal,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-            for (int i = 0; i < countGlobal; i++)
-            {
-                for (int ch = 0; ch < 2; ch++)
-                {
-                    source = localAudioContainerBuffer.getSample(ch, i);
-                    instrumentSampleContainer[instrumetClickedSerial].copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                }
-            }
-
-            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-            {
-                sound->setLength(instrumentSampleContainer[instrumetClickedSerial].getNumSamples());
-            }
-        }
-   
-        
-        
-        
-        
-        
+        sound->setLength(instrumentSampleContainer[instrumetClickedSerial].getNumSamples());
     }
 
-    // == 1
-    if(value == 1.0f)
-    {
-        instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-
-        if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-        {
-            sound->setLength(newSampleLength);
-        }
-    }
-    
-    
-    // > 1
-    if(value > 1.0f)
-    {
-        // Integer Part
-        if(value >= 2.0f)
-        {
-            
-            newSampleLength = newSampleLength * times;
-            
-            localAudioContainerBuffer.setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-
-            int sourceCount = 0;
-            int repeatCount = 0;
-            bool repeatBool = false;
-            for (int i = 0; i < newSampleLength; i++)
-            {
-                if (repeatBool)
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        float source = 0;
-                        source = localAudioContainerBuffer.getSample(ch, i - 1);
-                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Destine Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                    
-                    sourceCount += 1;
-                }
-                else
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        float source = 0;
-                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i - sourceCount);
-                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Destine Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                    
-                    
-                }
-                
-
-                repeatCount += 1;
-                
-                if(repeatCount == times)
-                {
-                    repeatCount = 0;
-                    repeatBool = false;
-                }
-                else
-                {
-                    repeatBool = true;
-                }
-
-            }
-
-            instrumentSampleContainer[instrumetClickedSerial] = localAudioContainerBuffer;
-            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-
-            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-            {
-                sound->setLength(newSampleLength);
-            }
-        }
-
-
-
-        // Decimal Times Part
-        
-    
-        std::cout<< "value: "<< value<<std::endl;
-        std::cout<< "times: "<< times<<std::endl;
-        
-        float decimal = value - times;
-        
-    
-        std::cout<< "Decimal: "<< decimal<<std::endl;
-
-        if(decimal != 0)
-        {
-            int n = origSampleLength * decimal;//Amount of Adding Decimal Point
-            
-            std::cout<< "n: "<< n<<std::endl;
-
-            
-
-            int newSampleLength2 = newSampleLength + n;
-            std::cout<< "newSampleLength: "<< newSampleLength<<std::endl;
-            std::cout<< "newSampleLength2: "<< newSampleLength2<<std::endl;
-            
-            int addingPointRuler = newSampleLength2/n;
-            
-            std::cout<< "addingPointRuler: "<< addingPointRuler<<std::endl;
-            
-            localAudioContainerBuffer.setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-
-            int tmp = 0;
-            int count = 0;
-
-            float source = 0;
-
-            for (int i = 0; i < newSampleLength2; i++)
-            {
-                if (tmp == addingPointRuler)
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        source = localAudioContainerBuffer.getSample(ch, i - 1);
-                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                    count += 1;
-                    tmp = 0;
-                }
-                else
-                {
-                    for (int ch = 0; ch < 2; ch++)
-                    {
-                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i - count);
-                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
-                    }
-                }
-
-                tmp += 1;
-            }
-
-            instrumentSampleContainer[instrumetClickedSerial] = localAudioContainerBuffer;
-            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-
-            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-            {
-                sound->setLength(newSampleLength2);
-            }
-        }
-    }
     // Update To the Part of Selected Audio
     SEPointSlider->audioRangeChange();
     // Update Audio Image
     clipMeter->repaint();
+
 }
+
+
 
 //void OrionClipConfiguration::clipStretchUpdate(double value)
 //{
@@ -1173,13 +907,113 @@ void OrionClipConfiguration::clipStretchUpdate(double value)
 //
 //    instrumentSampleContainer[instrumetClickedSerial] = instrumentOriginalSampleContainer[instrumetClickedSerial];
 //
-//    AudioBuffer<float> container;
+//    AudioBuffer<float> localAudioContainerBuffer;
 //    int newSampleLength = origSampleLength;
 //    int times =  floor(value);
 //
 //
-//    if(value < 1.0f){value = 1.0f;}//临时
 //
+//
+//    //if(value < 1.0f){value = 1.0f;}//临时
+//
+//    // < 1
+//    if(value < 1.0f)
+//    {
+//
+//
+//
+//        newSampleLength = origSampleLength * value;
+//        int countGlobal = origSampleLength;
+//
+//
+//
+//
+//        while(countGlobal > newSampleLength)
+//        {
+//
+//
+//
+//            int n = instrumentSampleContainer[instrumetClickedSerial].getNumSamples() - newSampleLength;//Amount of points need to be deleted
+//
+//            if(n == 1)
+//            {
+//                float source = 0;
+//                localAudioContainerBuffer.setSize(originalChannelNum, instrumentSampleContainer[instrumetClickedSerial].getNumSamples(),/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//
+//                localAudioContainerBuffer = instrumentSampleContainer[instrumetClickedSerial];
+//                int length = instrumentSampleContainer[instrumetClickedSerial].getNumSamples() - 1;
+//
+//                instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, length,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//                for (int i = 0; i < length; i++)
+//                {
+//                    for (int ch = 0; ch < 2; ch++)
+//                    {
+//                        source = localAudioContainerBuffer.getSample(ch, i);
+//                        instrumentSampleContainer[instrumetClickedSerial].copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                    }
+//                }
+//
+//                if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
+//                {
+//                    sound->setLength(length);
+//                }
+//
+//                return;
+//            }
+//
+//            int detelePointRuler = instrumentSampleContainer[instrumetClickedSerial].getNumSamples()/n;
+//
+//            int tmp = 0;
+//            float source = 0;
+//            int count = 0;
+//
+//            std::cout<< "n: "<< n<<std::endl;
+//            std::cout<< "instrumentSampleContainer[instrumetClickedSerial].getNumSamples(): "<< instrumentSampleContainer[instrumetClickedSerial].getNumSamples()<<std::endl;
+//            std::cout<< "detelePointRuler: "<< detelePointRuler<<std::endl;
+//            localAudioContainerBuffer.setSize(originalChannelNum, instrumentSampleContainer[instrumetClickedSerial].getNumSamples() ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//            for (int i = 0; i < instrumentSampleContainer[instrumetClickedSerial].getNumSamples(); i++)
+//            {
+//                if (tmp != detelePointRuler)
+//                {
+//                    for (int ch = 0; ch < 2; ch++)
+//                    {
+//                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i);
+//                        localAudioContainerBuffer.copyFrom(ch/* CH */, count/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                    }
+//                    count += 1;
+//                    tmp += 1;
+//                }
+//                else
+//                {
+//                    tmp = 0;
+//                }
+//            }
+//
+//            countGlobal = count;
+//            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, countGlobal,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//            for (int i = 0; i < countGlobal; i++)
+//            {
+//                for (int ch = 0; ch < 2; ch++)
+//                {
+//                    source = localAudioContainerBuffer.getSample(ch, i);
+//                    instrumentSampleContainer[instrumetClickedSerial].copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                }
+//            }
+//
+//            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
+//            {
+//                sound->setLength(instrumentSampleContainer[instrumetClickedSerial].getNumSamples());
+//            }
+//        }
+//
+//
+//
+//
+//
+//
+//    }
+//
+//    // == 1
 //    if(value == 1.0f)
 //    {
 //        instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
@@ -1189,39 +1023,63 @@ void OrionClipConfiguration::clipStretchUpdate(double value)
 //            sound->setLength(newSampleLength);
 //        }
 //    }
-//    else if(value > 1.0f)//
+//
+//
+//    // > 1
+//    if(value > 1.0f)
 //    {
 //        // Integer Part
-//        for(int k = 0; k < times; k++)
+//        if(value >= 2.0f)
 //        {
-//            newSampleLength = newSampleLength * 2;
-//            container.setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
 //
-//            int count = 0;
+//            newSampleLength = newSampleLength * times;
+//
+//            localAudioContainerBuffer.setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//
+//            int sourceCount = 0;
+//            int repeatCount = 0;
+//            bool repeatBool = false;
 //            for (int i = 0; i < newSampleLength; i++)
 //            {
-//                for (int ch = 0; ch < 2; ch++)
+//                if (repeatBool)
 //                {
-//                    float source = 0;
+//                    for (int ch = 0; ch < 2; ch++)
+//                    {
+//                        float source = 0;
+//                        source = localAudioContainerBuffer.getSample(ch, i - 1);
+//                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Destine Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                    }
 //
-//                    if ( i % 2 == 0)
+//                    sourceCount += 1;
+//                }
+//                else
+//                {
+//                    for (int ch = 0; ch < 2; ch++)
 //                    {
-//                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i - count);
+//                        float source = 0;
+//                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i - sourceCount);
+//                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Destine Start Sample */, &source /* Source Data */, 1/* numSamples */);
 //                    }
-//                    else
-//                    {
-//                        source = container.getSample(ch, i - 1);
-//                    }
-//                    container.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//
+//
 //                }
 //
-//                if ( i % 2 != 0)
+//
+//                repeatCount += 1;
+//
+//                if(repeatCount == times)
 //                {
-//                    count += 1;
+//                    repeatCount = 0;
+//                    repeatBool = false;
 //                }
+//                else
+//                {
+//                    repeatBool = true;
+//                }
+//
 //            }
 //
-//            instrumentSampleContainer[instrumetClickedSerial] = container;
+//            instrumentSampleContainer[instrumetClickedSerial] = localAudioContainerBuffer;
 //            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
 //
 //            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
@@ -1231,31 +1089,49 @@ void OrionClipConfiguration::clipStretchUpdate(double value)
 //        }
 //
 //
+//
 //        // Decimal Times Part
+//
+//
+//        std::cout<< "value: "<< value<<std::endl;
+//        std::cout<< "times: "<< times<<std::endl;
+//
 //        float decimal = value - times;
+//
+//
+//        std::cout<< "Decimal: "<< decimal<<std::endl;
 //
 //        if(decimal != 0)
 //        {
 //            int n = origSampleLength * decimal;//Amount of Adding Decimal Point
 //
-//            int addingPointRuler = newSampleLength/n;
+//            std::cout<< "n: "<< n<<std::endl;
 //
-//            int newSampleLength2 = newSampleLength + origSampleLength * decimal;
-//            container.setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//
+//
+//            int newSampleLength2 = newSampleLength + n;
+//            std::cout<< "newSampleLength: "<< newSampleLength<<std::endl;
+//            std::cout<< "newSampleLength2: "<< newSampleLength2<<std::endl;
+//
+//            int addingPointRuler = newSampleLength2/n;
+//
+//            std::cout<< "addingPointRuler: "<< addingPointRuler<<std::endl;
+//
+//            localAudioContainerBuffer.setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
 //
 //            int tmp = 0;
 //            int count = 0;
 //
 //            float source = 0;
 //
-//            for (int i = 0; i < newSampleLength; i++)
+//            for (int i = 0; i < newSampleLength2; i++)
 //            {
 //                if (tmp == addingPointRuler)
 //                {
 //                    for (int ch = 0; ch < 2; ch++)
 //                    {
-//                        source = container.getSample(ch, i - 1);
-//                        container.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                        source = localAudioContainerBuffer.getSample(ch, i - 1);
+//                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
 //                    }
 //                    count += 1;
 //                    tmp = 0;
@@ -1265,14 +1141,14 @@ void OrionClipConfiguration::clipStretchUpdate(double value)
 //                    for (int ch = 0; ch < 2; ch++)
 //                    {
 //                        source = instrumentSampleContainer[instrumetClickedSerial].getSample(ch, i - count);
-//                        container.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
+//                        localAudioContainerBuffer.copyFrom(ch/* CH */, i/* Dinstinate Start Sample */, &source /* Source Data */, 1/* numSamples */);
 //                    }
 //                }
 //
 //                tmp += 1;
 //            }
 //
-//            instrumentSampleContainer[instrumetClickedSerial] = container;
+//            instrumentSampleContainer[instrumetClickedSerial] = localAudioContainerBuffer;
 //            instrumentSampleContainer[instrumetClickedSerial].setSize(originalChannelNum, newSampleLength2 ,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
 //
 //            if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
@@ -1280,22 +1156,19 @@ void OrionClipConfiguration::clipStretchUpdate(double value)
 //                sound->setLength(newSampleLength2);
 //            }
 //        }
-//
 //    }
-//
-//
-//
-//
-//
 //    // Update To the Part of Selected Audio
 //    SEPointSlider->audioRangeChange();
-//
 //    // Update Audio Image
 //    clipMeter->repaint();
 //}
+
+
 
 
 OrionClipConfiguration::~OrionClipConfiguration()
 {
     
 }
+
+

@@ -12,7 +12,6 @@
 #include "PrimaryPaneComponent.h"
 #include "PluginEditor.h"
 #include "OrionGlobalVars.h"
-#include "PluginEditor.h"
 #include "OrionSamplerVoice.h"
 
 #include <iostream>
