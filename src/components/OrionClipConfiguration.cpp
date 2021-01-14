@@ -9,17 +9,7 @@
 */
 
 #include "OrionClipConfiguration.h"
-
-
-
-
-
 #include "main.cpp"
-
-
-
-
-
 //==============================================================================
 OrionClipConfiguration::OrionClipConfiguration(OrionaudioAudioProcessor& p) : processor(p)
 {

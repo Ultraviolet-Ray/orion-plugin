@@ -47,6 +47,10 @@ void SidePanelComponent::paint (Graphics& g)
     //const Colour colour (Colour::fromString ("FF" + colourString));
     //g.setColour(colour);
     //g.fillAll();
+    
+    g.setColour (juce::Colours::lightyellow);
+    g.drawRect (getLocalBounds().toFloat(),  0.5);
+    
 }
 
 void SidePanelComponent::resized()
@@ -56,18 +60,16 @@ void SidePanelComponent::resized()
     Rectangle<int> backgroundArea(0, 0, getWidth(), getHeight());
     backgroundImageView->setTransformToFit(backgroundArea.toFloat(), RectanglePlacement::stretchToFit);
     
-    
     //auto area = getLocalBounds();
     //auto logoArea = area.removeFromTop(getHeight() / 12);
     
-
     float unite = getHeight()/33;
     
     auto logoArea = Rectangle<int>(0, 0, getWidth(), 2.9 * unite);
     
     logoImage->setBounds(logoArea);
     
-    Rectangle<int> fileBrowerframeSize(0, 3 * unite, getWidth(), getHeight()*0.825);
+    Rectangle<int> fileBrowerframeSize(0, 3 * unite, getWidth(), getHeight() * 0.86);
     fileBrowser->setBounds(fileBrowerframeSize);
     
     

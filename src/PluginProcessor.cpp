@@ -198,7 +198,7 @@ void OrionaudioAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     AudioPlayHead* playhead = getPlayHead();
     
     sequencer->processBlock(playhead, buffer, midiMessages);
-    //inputAnalyser.addAudioData (buffer, 0, getTotalNumInputChannels());
+    //inputAnalyser.addAudioData(buffer, 0, getTotalNumInputChannels());
 
 }
 
@@ -307,6 +307,23 @@ AudioProcessorValueTreeState::ParameterLayout OrionaudioAudioProcessor::createPa
     
     return layout;
 
+}
+
+
+void OrionaudioAudioProcessor::audioRangeChange(int serial)
+{
+    int originalLength = instrumentSampleContainer[serial].getNumSamples();
+    int originalChannelNum = instrumentSampleContainer[serial].getNumChannels();
+    
+    int newSampleLength = RVal[serial] * originalLength - LVal[serial] * originalLength;
+    
+    instrumentSampleBufferPointer[serial]->setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+    instrumentSampleBufferPointer[serial]->setDataToReferTo(instrumentSampleContainer[serial].getArrayOfWritePointers(), originalChannelNum, LVal[serial] * originalLength, RVal[serial] * originalLength);
+    
+    if (auto* sound = dynamic_cast<OrionSamplerSound*> (sampler->getSound(serial).get()))
+    {
+        sound->setLength(newSampleLength);
+    }
 }
 
 

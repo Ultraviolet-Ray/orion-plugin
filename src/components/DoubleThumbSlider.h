@@ -32,8 +32,8 @@ class DoubleThumbSlider  : public Component
     
     void initThumb(float* LVal, float* RVal);
     
-    float LVal = 0.0f;
-    float RVal = 1.0f;
+    //float LVal = 0.0f;
+    //float RVal = 1.0f;
     
     Value LValue;
     Value RValue;

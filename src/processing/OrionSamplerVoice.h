@@ -46,13 +46,11 @@ private:
     std::unique_ptr<RubberBand::RubberBandStretcher> rb;//rub!!!
     AudioBuffer<float> mTempBuffer;//rub!!!
     
-    
     BigInteger midiNote;
     
-
     //float* masterVolume = &masterVolumeCoefficient;
-
     //
+    
     int index = 0;
     int pitchVal;
     float saturationVal = 0;
@@ -74,8 +72,8 @@ private:
     
     // dsp::Gain<float> overallgain;
     std::vector<double> magnitudes;
-    //int* instrumetSerialPtr = &instrumetClickedSerial;
     
+    //int* instrumetSerialPtr = &instrumetClickedSerial;
     float LInVals  [3] = {0.0f, 0.0f, 0.0f};
     float LOutVals [3] = {0.0f, 0.0f, 0.0f};
     float RInVals  [3] = {0.0f, 0.0f, 0.0f};
@@ -122,7 +120,6 @@ public:
     
     void ImagerCoefChange(float inputVal)
     {
-        
         clipImagerCoef = inputVal;
     
         panLWall = panLMax * clipImagerCoef;
@@ -329,7 +326,7 @@ public:
         
     };
     
-    void SatPassFilter(float f,float r,bool lowPass)
+    void SatPassFilter(float freq,float r,bool lowPass)
     {
         //r  = rez amount, from sqrt(2) to ~ 0.1
         //f  = cutoff frequency
@@ -339,17 +336,17 @@ public:
         
         if(lowPass)
         {
-            c = 1.0 / tan(PI * f / sampleRate);
+            c = 1.0 / tan(PI * freq / sampleRate);
             
             a1 = 1.0 / ( 1.0 + r * c + c * c);
             a2 = 2* a1;
             a3 = a1;
-            b1 = 2.0 * ( 1.0 - c*c) * a1;
+            b1 = 2.0 * ( 1.0 - c * c) * a1;
             b2 = ( 1.0 - r * c + c * c) * a1;
         }
         else
         {
-            c = tan(PI * f / sampleRate);
+            c = tan(PI * freq / sampleRate);
 
             a1 = 1.0 / ( 1.0 + r * c + c * c);
             a2 = -2*a1;

@@ -34,6 +34,10 @@ public:
         {
             //g.fillAll();
             //g.drawRect(getLocalBounds(), 1.f);
+            
+            g.setColour (juce::Colours::lightyellow);
+            g.drawRect (getLocalBounds().toFloat(),  1.0);
+            
         }
         
         void setNewDirectory(DirectoryContentsList &newDir)

@@ -30,6 +30,10 @@ public:
     // Pads
     //std::array<std::unique_ptr<DragAndDropButton>, 8> drumButtons;
     std::array<std::unique_ptr<DrawableImage>, 8> drumButtonCoverImageViews;
+    
+    Image downImages[8];
+    Image upImages[8];
+
         
 private:
     //OrionaudioAudioProcessorEditor* editor;

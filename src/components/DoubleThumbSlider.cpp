@@ -8,8 +8,6 @@
   ==============================================================================
 */
 
-
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DoubleThumbSlider.h"
 #include "OrionClipConfiguration.h"
@@ -78,20 +76,28 @@ void DoubleThumbSlider::mouseUp (const MouseEvent& e)
 
 void DoubleThumbSlider::audioRangeChange()
 {
-    int originalLength = instrumentSampleContainer[instrumetClickedSerial].getNumSamples();
-    int originalChannelNum = instrumentSampleContainer[instrumetClickedSerial].getNumChannels();
-    
-    int newSampleLength = RVal * originalLength - LVal * originalLength;
     
     
-    instrumentSampleBufferPointer[instrumetClickedSerial]->setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
-    instrumentSampleBufferPointer[instrumetClickedSerial]->setDataToReferTo(instrumentSampleContainer[instrumetClickedSerial].getArrayOfWritePointers(), originalChannelNum, LVal * originalLength, RVal * originalLength);
     
+    processor.audioRangeChange(instrumetClickedSerial);
     
-    if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
-    {
-        sound->setLength(newSampleLength);
-    }
+//    int originalLength = instrumentSampleContainer[instrumetClickedSerial].getNumSamples();
+//    int originalChannelNum = instrumentSampleContainer[instrumetClickedSerial].getNumChannels();
+//
+//    int newSampleLength = RVal[instrumetClickedSerial] * originalLength - LVal[instrumetClickedSerial] * originalLength;
+//
+//
+//    instrumentSampleBufferPointer[instrumetClickedSerial]->setSize(originalChannelNum, newSampleLength,/* keepExistingContent: */false,/* clearExtraSpace: */true,/* avoidReallocating: */false);
+//
+//    instrumentSampleBufferPointer[instrumetClickedSerial]->setDataToReferTo(instrumentSampleContainer[instrumetClickedSerial].getArrayOfWritePointers(),
+//                                                                            originalChannelNum, LVal[instrumetClickedSerial] * originalLength,
+//                                                                            RVal[instrumetClickedSerial] * originalLength);
+//
+//
+//    if (auto* sound = dynamic_cast<OrionSamplerSound*> (processor.sampler->getSound(instrumetClickedSerial).get()))
+//    {
+//        sound->setLength(newSampleLength);
+//    }
     
     //*instrumentSampleLength[instrumetClickedSerial] = newSampleLength;
     
@@ -178,17 +184,17 @@ void DoubleThumbSlider::mouseDrag (const MouseEvent& e)
 
 void DoubleThumbSlider::valueChange()
 {
-    LVal = jmap<float>(TLX, 0.0f, getWidth() - ellipseDiameter, 0.0f,1.0f);
-    RVal = jmap<float>(TRX, 0.0f, getWidth() - ellipseDiameter, 0.0f,1.0f);
+    LVal[instrumetClickedSerial] = jmap<float>(TLX, 0.0f, getWidth() - ellipseDiameter, 0.0f,1.0f);
+    RVal[instrumetClickedSerial] = jmap<float>(TRX, 0.0f, getWidth() - ellipseDiameter, 0.0f,1.0f);
     
     if(LValPtr != nullptr)
     {
-      *LValPtr = LVal;
+      *LValPtr = LVal[instrumetClickedSerial];
     }
     
     if(RValPtr != nullptr)
     {
-      *RValPtr = RVal;
+      *RValPtr = RVal[instrumetClickedSerial];
     }
     
     meter->updateZone();
@@ -199,14 +205,14 @@ void DoubleThumbSlider::initThumb(float* LValIn, float* RValIn)
 {
     if(LValIn != nullptr)
     {
-        LVal = *LValIn;
+        LVal[instrumetClickedSerial] = *LValIn;
         TLX = jmap<float>(*LValIn, 0.0f,1.0f, 0.0f, getWidth() - ellipseDiameter);
         LValPtr = LValIn;
     }
     
     if(RValIn != nullptr)
     {
-        RVal = *RValIn;
+        RVal[instrumetClickedSerial] = *RValIn;
         TRX = jmap<float>(*RValIn, 0.0f,1.0f, 0.0f, getWidth() - ellipseDiameter);
         RValPtr = RValIn;
     }

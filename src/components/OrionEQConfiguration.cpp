@@ -115,7 +115,7 @@ void OrionEQConfiguration::paint(Graphics& g)
     //g.drawFittedText (" 0 dB", plotFrame.getX() + 3, roundToInt (plotFrame.getY() + 2 + 0.5  * plotFrame.getHeight()), 50, 14, Justification::left, 1);
     // g.drawFittedText (String (- maxDB / 2) + " dB", plotFrame.getX() + 3, roundToInt (plotFrame.getY() + 2 + 0.75 * plotFrame.getHeight()), 50, 14, Justification::left, 1);
     
-    /*
+    
      //plot input and output audio data
     const Colour inputColour = Colours::greenyellow;
     const Colour outputColour = Colours::indianred;
@@ -128,7 +128,7 @@ void OrionEQConfiguration::paint(Graphics& g)
     g.setColour (outputColour);
     //g.drawFittedText ("Output", plotFrame.reduced (8, 28), Justification::topRight, 1);
     g.strokePath (analyserPath, PathStrokeType (1.0));
-    */
+    
     
     updateFrequencyResponses();
     

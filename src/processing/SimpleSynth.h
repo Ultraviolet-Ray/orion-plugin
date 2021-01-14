@@ -12,7 +12,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "OrionSamplerVoice.h"
 #include "OrionSamplerSound.h"
-#include "DragAndDropButton.h"
 #include "SoundTouch.h"
 
 
@@ -40,7 +39,7 @@ public:
     void changeSamples(int index,const String &f,int midi);
 
 
-    std::array<std::unique_ptr<DragAndDropButton>, 8> drumButtons;
+    //std::array<std::unique_ptr<DragAndDropButton>, 8> drumButtons;
     
     
     

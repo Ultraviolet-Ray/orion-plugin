@@ -84,6 +84,7 @@ public:
         return inputLevel;
     }
     
+    void audioRangeChange(int serial);
     
     
     MidiOutput* getMidiOutput() { return midiOutput.get(); }
@@ -130,7 +131,6 @@ private:
     
     Analyser<float> inputAnalyser;
     Analyser<float> outputAnalyser;
-    
     
     //std::unique_ptr<soundtouch::SoundTouch> soundTouch;
     

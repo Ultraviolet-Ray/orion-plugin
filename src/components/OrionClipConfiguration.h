@@ -30,7 +30,6 @@ public:
     void paint(Graphics& g) override;
     void resized() override;
 
-    
     void setClipOnOffSwitchImage(bool On);
     void clipOnOffSwitchClicked(bool isDown);
     

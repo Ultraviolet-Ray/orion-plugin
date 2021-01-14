@@ -27,6 +27,8 @@ const int CrashPitch = 48;
 const String instrumentName[8]                = {"Kick",   "Snare", "Clap",   "Perc",   "Snap",   "HHO",    "HHC",    "Crash"};
 int sidechainIndex[8]                         = {-1,       -1,       -1,       -1,       -1,       -1,       -1,       -1};
 bool InstrumentMakeNoise[8]                   = {false,    false,    false,    false,    false,    false,    false,    false};
+float LVal[8]                                 = {0.0f,     0.0f,     0.0f,     0.0f,     0.0f,     0.0f,     0.0f,     0.0f};
+float RVal[8]                                 = {1.0f,     1.0f,     1.0f,     1.0f,     1.0f,     1.0f,     1.0f,     1.0f};
 
 
 //int* instrumentSampleLength[8]                = {nullptr,  nullptr,  nullptr,  nullptr,  nullptr,  nullptr,  nullptr,  nullptr};
@@ -142,6 +144,8 @@ extern const int CrashPitch;
 extern const String instrumentName[];
 extern int  sidechainIndex[];
 extern bool InstrumentMakeNoise[];
+extern float LVal[];
+extern float RVal[];
 
 
 // Audio

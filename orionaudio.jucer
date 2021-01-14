@@ -68,10 +68,6 @@
         <FILE id="heEkaw" name="CircularMeter.h" compile="0" resource="0" file="src/components/CircularMeter.h"/>
         <FILE id="bWrDrR" name="ClipMeter.cpp" compile="1" resource="0" file="src/components/ClipMeter.cpp"/>
         <FILE id="SllZnW" name="ClipMeter.h" compile="0" resource="0" file="src/components/ClipMeter.h"/>
-        <FILE id="fRSaSJ" name="DoubleThumbSlider.cpp" compile="1" resource="0"
-              file="src/components/DoubleThumbSlider.cpp"/>
-        <FILE id="p0wHiw" name="DoubleThumbSlider.h" compile="0" resource="0"
-              file="src/components/DoubleThumbSlider.h"/>
         <FILE id="haOmBH" name="CompressorMeter.cpp" compile="1" resource="0"
               file="src/components/CompressorMeter.cpp"/>
         <FILE id="flFGem" name="CompressorMeter.h" compile="0" resource="0"
@@ -80,10 +76,16 @@
               resource="0" file="src/components/CompressorSidechainSelectWindow.cpp"/>
         <FILE id="sjgbyW" name="CompressorSidechainSelectWindow.h" compile="0"
               resource="0" file="src/components/CompressorSidechainSelectWindow.h"/>
-        <FILE id="xZt8jr" name="DigitTransverter.h" compile="0" resource="0"
-              file="src/components/DigitTransverter.h"/>
+        <FILE id="Wuv9qw" name="DragAndDropButton.cpp" compile="1" resource="0"
+              file="src/components/DragAndDropButton.cpp"/>
         <FILE id="gjkNEB" name="DragAndDropButton.h" compile="0" resource="0"
               file="src/components/DragAndDropButton.h"/>
+        <FILE id="fRSaSJ" name="DoubleThumbSlider.cpp" compile="1" resource="0"
+              file="src/components/DoubleThumbSlider.cpp"/>
+        <FILE id="p0wHiw" name="DoubleThumbSlider.h" compile="0" resource="0"
+              file="src/components/DoubleThumbSlider.h"/>
+        <FILE id="xZt8jr" name="DigitTransverter.h" compile="0" resource="0"
+              file="src/components/DigitTransverter.h"/>
         <FILE id="FjnNtt" name="DraggableFileBrowserComponent.cpp" compile="1"
               resource="0" file="src/components/DraggableFileBrowserComponent.cpp"/>
         <FILE id="FROJGa" name="DraggableFileBrowserComponent.h" compile="0"
@@ -297,7 +299,6 @@
               <FILE id="y7qEJp" name="HHOOff.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/HHOOff.png"/>
               <FILE id="jSGBnH" name="HHOOn.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/HHOOn.png"/>
               <FILE id="pV58xy" name="KickOff.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/KickOff.png"/>
-              <FILE id="aSSsLB" name="KickOn .png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/KickOn .png"/>
               <FILE id="HlqQ7r" name="KickOn.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/KickOn.png"/>
               <FILE id="rRloyg" name="PercOff.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/PercOff.png"/>
               <FILE id="LClCqW" name="PercOn.png" compile="0" resource="1" file="../../../../Documents/GitHub/orion-plugin-assets/graphics/primaryPane/instruments/PercOn.png"/>

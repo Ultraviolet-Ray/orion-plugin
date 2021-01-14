@@ -171,7 +171,7 @@ void SimpleSynth::loadSamples()
         File filePath(audiofolder.getChildFile(dir).getChildFile(filename));
         instrumentSamplePathes[i] = filePath;
         std::unique_ptr<AudioFormatReader> reader;
-        
+        DBG("path name: " + instrumentSamplePathes[i].getFullPathName());
         reader.reset(audioFormatManager.createReaderFor(instrumentSamplePathes[i]));
         if (reader == nullptr)
             return;
@@ -209,6 +209,7 @@ void SimpleSynth::loadSamples()
         instrumentSampleContainer[i] = instrumentOriginalSampleContainer[i];
       
         addSound(sampler);
+        
     }
     
     //std::unique_ptr<AudioFormatReader> reader;
@@ -233,6 +234,7 @@ void SimpleSynth::changeSamples(int index,const String &f,int midi)//index shoul
     //const String f = files[0];
     file = new File(f);
     std::unique_ptr<AudioFormatReader> reader;
+    
     reader.reset(audioFormatManager.createReaderFor(*file));
     
     if (reader.get() == nullptr)

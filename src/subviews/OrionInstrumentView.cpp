@@ -14,74 +14,39 @@ OrionInstrumentView::OrionInstrumentView()//OrionaudioAudioProcessorEditor* e
 {
     //processor = p;
     //editor = e;
+    downImages[0] = ImageCache::getFromMemory(BinaryData::KickOn_png, BinaryData::KickOn_pngSize);
+    downImages[1] = ImageCache::getFromMemory(BinaryData::SnareOn_png, BinaryData::SnareOn_pngSize);
+    downImages[2] = ImageCache::getFromMemory(BinaryData::ClapOn_png, BinaryData::ClapOn_pngSize);
+    downImages[3] = ImageCache::getFromMemory(BinaryData::PercOn_png, BinaryData::PercOn_pngSize);
+    downImages[4] = ImageCache::getFromMemory(BinaryData::SnapOn_png, BinaryData::SnapOn_pngSize);
+    downImages[5] = ImageCache::getFromMemory(BinaryData::HHOOn_png, BinaryData::HHOOn_pngSize);
+    downImages[6] = ImageCache::getFromMemory(BinaryData::HHCOn_png, BinaryData::HHCOn_pngSize);
+    downImages[7] = ImageCache::getFromMemory(BinaryData::CrashOn_png, BinaryData::CrashOn_pngSize);
     
+    upImages[0] = ImageCache::getFromMemory(BinaryData::KickOff_png, BinaryData::KickOff_pngSize);
+    upImages[1] = ImageCache::getFromMemory(BinaryData::SnareOff_png, BinaryData::SnareOff_pngSize);
+    upImages[2] = ImageCache::getFromMemory(BinaryData::ClapOff_png, BinaryData::ClapOff_pngSize);
+    upImages[3] = ImageCache::getFromMemory(BinaryData::PercOff_png, BinaryData::PercOff_pngSize);
+    upImages[4] = ImageCache::getFromMemory(BinaryData::SnapOff_png, BinaryData::SnapOff_pngSize);
+    upImages[5] = ImageCache::getFromMemory(BinaryData::HHOOff_png, BinaryData::HHOOff_pngSize);
+    upImages[6] = ImageCache::getFromMemory(BinaryData::HHCOff_png, BinaryData::HHCOff_pngSize);
+    upImages[7] = ImageCache::getFromMemory(BinaryData::CrashOff_png, BinaryData::CrashOff_pngSize);
+    
+
     
     for (int i = 0; i < drumButtonCoverImageViews.size(); i++)
     {
         //drumButtons[i].reset(new DragAndDropButton());
         //addAndMakeVisible(drumButtons[i].get());
-        
         drumButtonCoverImageViews[i].reset(new DrawableImage());
+        drumButtonCoverImageViews[i]->setImage(upImages[i]);
         addAndMakeVisible(drumButtonCoverImageViews[i].get());
-        drumButtonCoverImageViews[i]->setVisible(false);
+        drumButtonCoverImageViews[i]->setVisible(true);
     }
     
-    Image downImage;
-    Image upImage;
-    
-    // DRUM VOICE BUTTONS & DRUM COVER IMAGEVIEW
-    downImage = ImageCache::getFromMemory(BinaryData::KickOn_png, BinaryData::KickOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::KickOff_png, BinaryData::KickOff_pngSize);
-    //drumButtons[0]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[0]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::kick, orion::Tabs::kickTab, drumButtons[0]->isDown()); };
-    drumButtonCoverImageViews[0]->setImage(downImage);
-    
 
-    
-
-    downImage = ImageCache::getFromMemory(BinaryData::SnareOn_png, BinaryData::SnareOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::SnareOff_png, BinaryData::SnareOff_pngSize);
-    //drumButtons[1]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[1]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::snare, orion::Tabs::snareTab, drumButtons[1]->isDown()); };
-    drumButtonCoverImageViews[1]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::ClapOn_png, BinaryData::ClapOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::ClapOff_png, BinaryData::ClapOff_pngSize);
-    //drumButtons[2]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[2]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::clap, orion::Tabs::clapTab, drumButtons[2]->isDown()); };
-    drumButtonCoverImageViews[2]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::PercOn_png, BinaryData::PercOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::PercOff_png, BinaryData::PercOff_pngSize);
-    //drumButtons[3]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[3]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::perc, orion::Tabs::percTab, drumButtons[3]->isDown()); };
-    drumButtonCoverImageViews[3]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::SnapOn_png, BinaryData::SnapOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::SnapOff_png, BinaryData::SnapOff_pngSize);
-    //drumButtons[4]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[4]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::snap, orion::Tabs::snapTab, drumButtons[4]->isDown()); };
-    drumButtonCoverImageViews[4]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::HHOOn_png, BinaryData::HHOOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::HHOOff_png, BinaryData::HHOOff_pngSize);
-    //drumButtons[5]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[5]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::hho, orion::Tabs::hhoTab, drumButtons[5]->isDown()); };
-    drumButtonCoverImageViews[5]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::HHCOn_png, BinaryData::HHCOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::HHCOff_png, BinaryData::HHCOff_pngSize);
-    //drumButtons[6]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[6]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::hhc, orion::Tabs::hhcTab, drumButtons[6]->isDown()); };
-    drumButtonCoverImageViews[6]->setImage(downImage);
-
-    downImage = ImageCache::getFromMemory(BinaryData::CrashOn_png, BinaryData::CrashOn_pngSize);
-    upImage = ImageCache::getFromMemory(BinaryData::CrashOff_png, BinaryData::CrashOff_pngSize);
-    //drumButtons[7]->setImages(false, true, true, upImage, 1.f, Colours::transparentBlack, upImage, 1.f, Colours::transparentBlack, downImage, 1.f, Colours::transparentBlack);
-    //drumButtons[7]->onStateChange = [&] { editor->drumButtonClicked(orion::MidiNotes::crash, orion::Tabs::crashTab, drumButtons[7]->isDown()); };
-    drumButtonCoverImageViews[7]->setImage(downImage);
-    
-    
+   
+   
     startTimerHz(30);
     instrumentOnArray = instrumentsOnStates;
     
@@ -106,6 +71,7 @@ void OrionInstrumentView::resized()
     area.setSize(padWidth, padHeight);
     
     int drumCount = 0;
+    
     for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -113,10 +79,13 @@ void OrionInstrumentView::resized()
             area.setPosition(j * padWidth * 1.5, i * padHeight);
             drumButtonCoverImageViews[drumCount]->setBounds(area);
      
-            drumButtonCoverImageViews[drumCount]->setTransformToFit(area.toFloat(), RectanglePlacement::centred);
+            drumButtonCoverImageViews[drumCount]->setTransformToFit(area.toFloat(), RectanglePlacement::stretchToFit);
             drumCount++;
         }
     }
+    
+    
+    
 }
 
 
@@ -126,11 +95,12 @@ void OrionInstrumentView::timerCallback()
     {
         if( *(instrumentOnArray + i))
         {
-            drumButtonCoverImageViews[i]->setVisible(true);
+            //drumButtonCoverImageViews[i]->setVisible(true);
+            drumButtonCoverImageViews[i]->setImage(downImages[i]);
         }
         else
         {
-            drumButtonCoverImageViews[i]->setVisible(false);
+            drumButtonCoverImageViews[i]->setImage(upImages[i]);
         }
     }
 }

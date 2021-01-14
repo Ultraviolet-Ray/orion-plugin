@@ -110,11 +110,8 @@ namespace BinaryData
     extern const char*   KickOff_png;
     const int            KickOff_pngSize = 28371;
 
-    extern const char*   KickOn__png;
-    const int            KickOn__pngSize = 39562;
-
     extern const char*   KickOn_png;
-    const int            KickOn_pngSize = 92861;
+    const int            KickOn_pngSize = 39562;
 
     extern const char*   PercOff_png;
     const int            PercOff_pngSize = 26869;
@@ -480,7 +477,7 @@ namespace BinaryData
     const int            SXJ_Snare9_wavSize = 29272;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 157;
+    const int namedResourceListSize = 156;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
